@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>High or Low</title>
+  <script src='script.js' defer></script>
+  <style>
+      .message,
+      #results {
+          display: none;
+      }
+
+      div {
+          padding: 10px 0;
+      }
+
+      #winMessage {
+          color: green;
+      }
+
+      #directionMessage {
+          color: blue;
+      }
+
+      #errorMessage {
+          color: red;
+      }
+
+  </style>
+</head>
+<body>
+    <h1>Can you guess the correct number?</h1>
+
+    <h3>Choose a number between 10 and 70</h3>
+
+    <div>
+      <input type='text' id='playerChoice'>
+    </div>
+
+    <button id='playBtn'>Play a new Game!!</button>
+    <button id='guessBtn'>Guess!</button>
+
+    <div id='results'>
+      <div id='winMessage' class='message'>Yayyyy you guessed the RIGHT answer!!</div>
+      <div id='directionMessage' class='message'></div>
+      <div id='errorMessage' class='message'>Please choose a number between 10 and 70 :-/</div>
+    </div>
+
+</body>
+</html>
