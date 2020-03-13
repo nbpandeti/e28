@@ -3,53 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <title>Word Scramble</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" defer></script>
   <script src='script.js' defer></script>
   <style>
-      .message,
-      #results,
-      #gamePlay {
-          display: none;
-      }
-
       div {
           padding: 10px 0;
       }
 
       #winMessage {
-          color: green;
+          background-color: green;
+	  color: white;
+	  float: center;
+	  padding: 10px 10px 10px 10px;
       }
 
       #errorMessage {
-          color: red;
+          background-color: red;
+	  color: white;
+	  float: center;
+          padding: 10px 10px 10px 10px;
       }
 
   </style>
 </head>
 <body>
+<div id='app'>
     <h1>Word Scramble</h1>
 
-    <h3>Choose a number between 10 and 70</h3>
-
-    <div id='gameStart'>
-      Enter your player name:<input v-model='name'/><button id='playBtn'>Let's play!</button>
+    <div id='gameStart' v-show="playing == false">
+	Enter your player name:<input v-model='name'/>
+	<button id='playBtn' v-on:click="startGame()">Let's play!</button>
     </div>
 
-    <div id='gamePlay'>
-      <div>Game on {{ name }}!</div>
-
-      <div>Your mystery word is: {{ scrambled }}</div>
-
-      <div> Hint: <i>{{ scrambledHint }}</i></div>
-
-      <div> Your guess: <input type='text' id='guess'/> <button id='guessBtn'>Submit guess</button>
-    </div>
-
-    <div id='results'>
-	<div id='errorMessage' class='message'>Sorry, that's not correct. Please try again.</div>
-	<div id='winMessage' class='message'>
-		You got it! Nice work. <button id='replayBtn'>Play again</button>
+    <div id='gamePlay' v-show="playing == true">
+	<div>Game on {{ name }}!</div>
+	<div>Your mystery word is: <b>{{ playingWord.scramble }}</b></div>
+	<div> Hint: <i>{{ playingWord.hint }}</i></div>
+	<div> 
+		Your guess: <input v-model='guess'/>
+		<button id='guessBtn' v-on:click="guessAnswer()">Submit guess</button>
 	</div>
     </div>
-
+    
+    <div id='results' v-show="guessing == true">
+	<span id='errorMessage' v-show='correct == false'>
+		Sorry, that's not correct. Please try again.
+	</span>
+	
+	<span id='winMessage' v-show='correct == true'>
+		You got it! Nice work. 
+		<button id='replayBtn' v-on:click="startGame()">Play again</button>
+	</span>
+    </div>
+</div>
 </body>
 </html>

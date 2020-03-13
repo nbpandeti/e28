@@ -5,87 +5,60 @@
 let app = new Vue({
 	el:'#app',
 	data: {
-		name = '',
+		name: '',
+		guess: '',
+		playing: false,
+		guessing: false,
+		correct: null,
+		randomWordIndex: 0,
 		words: [
 		    ['apple', 'Sometimes red, sometimes delicious'],
 		    ['washington', 'Rushmore’s left edge'],
 		    ['pumpkin', 'Halloween’s favorite fruit'],
 		    ['football', 'Play with your hands or feet, depending on your location']
-		]
+		],
+		playingWord: {
+			word: '',
+			hint: '',
+			scramble: ''
+		}
 	},
 	methods: {
+		startGame() {
+			this.playing = true;
+			this.guessing = false;
+			this.randomWordIndex = Math.floor((Math.random()*4));
+			this.playingWord.word = this.words[this.randomWordIndex][0];
+			this.playingWord.hint = this.words[this.randomWordIndex][1];
+			this.playingWord.scramble = this.scramble(this.playingWord.word);
+		},
+		guessAnswer() {
+			this.playing = true;
+			if(this.guess == this.playingWord.word) {
+				this.correct = true;
+			} else {
+				this.correct = false;
+			}
+			this.guessing = true;
+
+		},
+		scramble(word) {
+			var newArr = [];
+  			var neww = '';
+  			var text = word.replace(/[\r\n]/g, '').split(' ');
+
+  			text.map(function(v) {
+    				v.split('').map(function() {
+      					var hash = Math.floor(Math.random() * v.length);
+      					neww += v[hash];
+      					v = v.replace(v.charAt(hash), '');
+    				});
+    				newArr.push(neww);
+    				neww = '';
+  			});
+  			var x = newArr.map(v => v.split('').join('')).join('\n');
+  			return x.split('').map(v => v.toLowerCase()).join('');
+		}
 	}
-})
+});
 
-
-
-
-
-
-
-
-
-
-var playBtn = document.querySelector('#playBtn');
-var guessBtn = document.querySelector('#guessBtn');
-var results = document.querySelector('#results');
-var winMessage = document.querySelector('#winMessage');
-var directionMessage = document.querySelector('#directionMessage');
-var errorMessage = document.querySelector('#errorMessage');
-var min = 10;
-var max = 70;
-var answer = 'hii';
-
-playBtn.addEventListener('click', play);
-guessBtn.addEventListener('click', guess);
-
-function play() {
-    answer = 'hii';
-    winMessage.style.display = 'none';
-    directionMessage.style.display = 'none';
-    errorMessage.style.display = 'none';
-
-    answer = Math.floor(Math.random() * (max - min)) + min;
-}
-
-function guess() {
-
-    winMessage.style.display = 'none';
-    directionMessage.style.display = 'none';
-    errorMessage.style.display = 'none';
-
-    if (answer == 'hii') {
-        play();
-    }
-
-    // Which radio to the player choose - heads or tails?
-    var playerChoice = document.querySelector('#playerChoice').value;
-
-    // Player wins if their choice matches the flip
-    var win = playerChoice == answer;
-    var less = playerChoice < answer;
-    var more = playerChoice > answer;
-
-    var error = playerChoice < min || playerChoice > max;
-
-    results.style.display = 'none';
-    setTimeout(function () {
-        results.style.display = 'block';
-    }, 100);
-
-    // Show the appropriate message
-    if (error) {
-        errorMessage.style.display = 'block';
-    } else {
-        if (win) {
-            winMessage.style.display = 'block';
-        } else {
-            if (less) {
-                directionMessage.innerHTML = 'Your GUESS is LOW, guess higher!!'
-            } else {
-                directionMessage.innerHTML = 'Your GUESS is HIGH, guess lower!!'
-            }
-            directionMessage.style.display = 'block';
-        }
-    }
-}
