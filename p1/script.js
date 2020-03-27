@@ -1,67 +1,157 @@
 /**
- * Created by npandeti on 2/19/20.
+ * Created by npandeti on 3/26/20.
  */
-// All the elements on the page we'll work with
-var playBtn = document.querySelector('#playBtn');
-var guessBtn = document.querySelector('#guessBtn');
-var results = document.querySelector('#results');
-var winMessage = document.querySelector('#winMessage');
-var directionMessage = document.querySelector('#directionMessage');
-var errorMessage = document.querySelector('#errorMessage');
-var min = 10;
-var max = 70;
-var answer = 'hii';
+Vue.component('game-results', {
+	props: {
+		playerWins: {
+			type: Number
+		},
+		houseWins: {
+			type: Number
+		},
+		playerRounds: {
+			type: Array,
+			default: function () { return [] }
+		},
+		houseRounds: {
+			type: Array,
+			default: function () { return [] }
+		},
+		bet: {
+			type: String
+		},
+		endGame: {
+			type: Boolean
+		},
+		betResult: {
+			type: String
+		},
+	},
+	template: '#game-results',
+	methods: {
+	}
+})
 
-playBtn.addEventListener('click', play);
-guessBtn.addEventListener('click', guess);
+let app = new Vue({
+        el:'#app',
+        data: {
+		min: 10,
+		max: 70,
+		numGames: 10,
+		gameRound: 0,
+		gamePlayLevel: 1,
+		answer: 'hii',
+		playerChoice: '',
+		guessLeft: 0,
+		guesses: [],
+		newGame: true,
+		endGame: false,
+		gamePlay: false,
+		showResult: false,
+		win: false,
+		direction: false,
+		less: false,
+		more: false,
+		error: false,
+		levels: [
+			15,  //easy
+			10,  //normal
+			5    //hard
+		],
+		bet: '0',
+		betResult: '',
+		stats: {
+			numPlayerWins: 0,
+			numHouseWins: 0,
+			playerRounds: [],
+			houseRounds: []
+		}
+        },
+        methods: {
+		newStart: function () {
+			this.newGame = true;
+			this.gamePlay = false;
+			this.endGame = false;
+			this.betResult = '';
+			this.bet = '0';
+			this.stats.numPlayerWins = 0;
+			this.stats.numHouseWins = 0;
+			this.stats.playerRounds = [];
+			this.stats.houseRounds = [];
+		},
+		startGame() {
+			this.guessLeft = this.levels[this.gamePlayLevel];
+			this.newGame = false;
+			this.gamePlay = true;
+			this.play();
+		},
+                play() {
+			this.playerChoice = '';
+			this.guesses = [];
+			this.gameRound++;
+			this.answer = 'hii';
+			this.showResult = false;
+			this.win = false;
+			this.direction = false;
+			this.less = false;
+			this.more = false;
+			this.error = false;
+			
+			this.answer = Math.floor(Math.random() * (this.max - this.min)) + this.min;
+		},
+		guessNumber() {
+			this.showResult = false;
+                        this.win = false;
+                        this.direction = false;
+			this.less = false;
+                        this.more = false;
+                        this.error = false;
 
-function play() {
-    answer = 'hii';
-    winMessage.style.display = 'none';
-    directionMessage.style.display = 'none';
-    errorMessage.style.display = 'none';
+			if (this.answer == 'hii') {
+				this.play();
+			}
+			
+			this.guessLeft = this.guessLeft - 1;
+			this.guesses.push(this.playerChoice);
+			if (this.guessLeft == 0) {
+				this.stats.numHouseWins++;
+				this.stats.houseRounds.push(this.gameRound);
 
-    answer = Math.floor(Math.random() * (max - min)) + min;
-}
+				if (this.gameRound == 10) {
+					this.endGame = true;
+				}
+			} else {
+				// Player wins if their choice matches the flip
+				this.win = this.playerChoice == this.answer;
+				this.error = this.playerChoice < this.min || this.playerChoice > this.max;
+			
+				if (this.win != true && this.error != true) {
+					this.less = this.playerChoice < this.answer;
+                        		this.more = this.playerChoice > this.answer;
+                                	this.direction = true;
+				}
 
-function guess() {
+				if (this.win == true) {
+					this.stats.numPlayerWins++;
+                                	this.stats.playerRounds.push(this.gameRound);
 
-    winMessage.style.display = 'none';
-    directionMessage.style.display = 'none';
-    errorMessage.style.display = 'none';
+					if (this.gameRound == 10) {
+						this.endGame = true;
+					}
 
-    if (answer == 'hii') {
-        play();
-    }
+				}
+			}
 
-    // Which radio to the player choose - heads or tails?
-    var playerChoice = document.querySelector('#playerChoice').value;
+			if (this.endGame == true) {
+				if (this.stats.numPlayerWins == this.bet) {
+					this.betResult = 'CORRECT!! Yayy! You won your bet!';
+				} else {
+					this.betResult = 'WRONG  :(  You lost your bet. HOUSE WINS!!!';
+				}
+			}
+			this.showResult = true;
 
-    // Player wins if their choice matches the flip
-    var win = playerChoice == answer;
-    var less = playerChoice < answer;
-    var more = playerChoice > answer;
-
-    var error = playerChoice < min || playerChoice > max;
-
-    results.style.display = 'none';
-    setTimeout(function () {
-        results.style.display = 'block';
-    }, 100);
-
-    // Show the appropriate message
-    if (error) {
-        errorMessage.style.display = 'block';
-    } else {
-        if (win) {
-            winMessage.style.display = 'block';
-        } else {
-            if (less) {
-                directionMessage.innerHTML = 'Your GUESS is LOW, guess higher!!'
-            } else {
-                directionMessage.innerHTML = 'Your GUESS is HIGH, guess lower!!'
-            }
-            directionMessage.style.display = 'block';
+		}
         }
-    }
-}
+});
+

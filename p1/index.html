@@ -3,48 +3,138 @@
 <head>
   <meta charset="UTF-8">
   <title>High or Low</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" defer></script>
   <script src='script.js' defer></script>
   <style>
-      .message,
-      #results {
-          display: none;
-      }
-
       div {
           padding: 10px 0;
       }
 
+      .win,
       #winMessage {
-          color: green;
+          background-color: green;
+          color: white;
+          float: center;
+          padding: 10px 10px 10px 10px;
+      }
+
+      .lose,
+      #errorMessage {
+          background-color: red;
+          color: white;
+          float: center;
+          padding: 10px 10px 10px 10px;
+      }
+      
+      .message,
+      #results {
+          display: none;
       }
 
       #directionMessage {
           color: blue;
       }
 
-      #errorMessage {
-          color: red;
-      }
-
   </style>
 </head>
 <body>
+<script type='text/x-template' id='game-results'>
+<div>
+	<div id='score'>Score
+		<ul>
+			<li>Player: {{ playerWins }}</li>
+			<li>House: {{ houseWins }}</li>
+		</ul>
+	</div>
+	<div id='history'>History
+		<ul>
+			<li>Player won rounds: {{ playerRounds.join(', ') }} </li>
+			<li>House won rounds: {{ houseRounds.join(', ') }} </li>
+		</ul>
+	</div>
+	You made a bet that you would win {{ bet }} out of 10 rounds. So how are you doing?
+	<div></div>
+	<span id="gameResults" v-show="endGame == true" v-bind:class="bet == playerWins ? 'win' : 'lose'">
+		And the RESULTS are that you were {{ betResult }}
+		<button @click='$emit("new-start")' >Let's Start a new Game</button>
+	</span>
+</div>
+</script>
+
+<div id='app'>
+
     <h1>Can you guess the correct number?</h1>
 
-    <h3>Choose a number between 10 and 70</h3>
+    <div id='newGame' v-show='newGame == true'>
+	    <h3> Choose your level of difficulty and make a bet </h3>
 
-    <div>
-      <input type='text' id='playerChoice'>
+	    <div>
+		    How hard do you want to play?
+		    <input type="radio" id='easy' value='0' v-model='gamePlayLevel'>
+		    <label for='easy'>Easy</label>
+
+		    <input type="radio" id='normal' value='1' v-model='gamePlayLevel'>
+                    <label for='normal'>Normal</label>
+
+		    <input type="radio" id='hard' value='2' v-model='gamePlayLevel'>
+                    <label for='hard'>Hard</label>
+	    </div>
+
+	    <div>
+		    How many rounds do you think you will win out of 10 rounds?
+		    Bet: <input v-model='bet'> out of 10 rounds
+	    </div>
+	    <button id='startGameBtn' v-on:click="startGame()">Let's Play a Game!!</button>
+
     </div>
 
-    <button id='playBtn'>Play a new Game!!</button>
-    <button id='guessBtn'>Guess!</button>
 
-    <div id='results'>
-      <div id='winMessage' class='message'>Yayyyy you guessed the RIGHT answer!!</div>
-      <div id='directionMessage' class='message'></div>
-      <div id='errorMessage' class='message'>Please choose a number between 10 and 70 :-/</div>
+    <div id='rounds' v-show='gamePlay == true'>
+	    <h2> Round {{ gameRound }} </h2>
+	    <h3>Choose a number between {{ min }} and {{ max }}</h3>
+	    <h4>You are allowed {{ levels[gamePlayLevel] }} guesses! Good Luck! </h4>
+
+	    <div>
+	      <input v-model='playerChoice' :disabled="win == true || guessLeft == 0">
+	    </div>
+
+	    <button id='guessBtn' v-on:click="guessNumber()" :disabled="win == true || guessLeft == 0">Guess!</button>
+
+	    <p> You have made the following guesses: {{ guesses.join(', ') }} </p>
+	    <div id='roundResults' v-show="showResult == true">
+	      <span id='winMessage' v-show="win == true">
+		      Yayyyy you guessed the RIGHT answer!! You won this round!!
+		      <button id='nextRoundBtn' v-show="endGame == false" v-on:click="startGame()">Play Next Round</button>
+	      </span>
+	      <span id='directionMessage' v-show="direction == true" >
+		      <span id='lowGuessMessage' v-show="less == true" >
+			      Your GUESS is LOW, guess higher!! {{ guessLeft }} guess left!
+		      </span>
+		      <span id='highGuessMessage' v-show="more == true" >
+			      Your GUESS is HIGH, guess lower!! {{ guessLeft }} guess left!
+		      </span>
+	      </span>
+	      <span id='errorMessage' v-show="error == true">
+		      Please choose a number between 10 and 70 :-/ {{ guessLeft }} guess left!
+	      </span>
+	      <span id='lostMessage' v-show="guessLeft == 0" v-bind:class="'lose'">
+		      Oh No, you ran out of guesses :( House wins this round!!
+		      <button id='nextRoundBtn' v-show="endGame == false" v-on:click="startGame()">Play Next Round</button>
+	    </div>
+
+	    <game-results
+		    v-bind:player-wins='stats.numPlayerWins'
+		    v-bind:house-wins='stats.numHouseWins'
+		    v-bind:player-rounds='stats.playerRounds'
+		    v-bind:house-rounds='stats.houseRounds'
+		    v-bind:bet='bet'
+		    v-bind:end-game='endGame'
+		    v-bind:bet-result='betResult'
+		    v-on:new-start='newStart()'>
+	    </game-results>
     </div>
+
+    <button id='reset' v-on:click="newStart()">Reset</button>
 
 </body>
 </html>
