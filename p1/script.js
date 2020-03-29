@@ -78,6 +78,7 @@ let app = new Vue({
 			this.stats.numHouseWins = 0;
 			this.stats.playerRounds = [];
 			this.stats.houseRounds = [];
+			this.gameRound = 0;
 		},
 		startGame() {
 			this.guessLeft = this.levels[this.gamePlayLevel];
