@@ -7,6 +7,8 @@
 - Home Page
 - Recipes Page
 - Recipe Details Page
+- Add an Ingredient
+- And a Cook Step
 - Add a Recipe
 - Favorites
 
@@ -14,6 +16,8 @@
 - HomePage.vue
 - FavoritesPage.vue
 - RecipeCreatePage.vue
+- IngredientCreatePage.vue
+- CookStepCreatePage.vue
 - RecipesPage.vue
 - RecipePage.vue
 - ShowRecipe.vue
@@ -30,7 +34,6 @@
 
 
 ## Notes for instructor
-- The way I have my firebase set up in basically a 4 separate collection
- Collections: recipes, ingredients, cooking steps, and nutritional facts
-- I'm trying to figure out how to exactly do an add form but its giving me a lot of trouble because of the fact that there are an indefined list of ingredients and cooking steps.
- At the moment my add form adds the recipe name, slug, and nutritional info and that's it, and then for it to show up in the recipes page, you need to refresh the page
+- Added valiations
+- As with the last project, I couldn't figure out a way to have an infinte list of ingredients and cooking steps, so I created separate add pages for ingredients and cook steps
+- Unfortunately you will have to add a single ingredient and cook step at a time
