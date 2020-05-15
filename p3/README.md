@@ -1,7 +1,7 @@
 
-# Project 2
+# Project 3
 + By: Nitya Pandeti
-+ Production URL: <http://e28p2.e28tyasite.me/>
++ Production URL: <http://e28p3.e28tyasite.me/>
 
 ## Pages summary
 - Home Page
