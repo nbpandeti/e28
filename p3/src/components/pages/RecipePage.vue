@@ -13,7 +13,7 @@
             <div style="align: left; text-align: left; float: left;">
                 <p style="font-weight: bold; margin-top: 5px; margin-bottom: 5px; font-size: 2.5rem; letter-spacing: -1px;">Ingredients:</p>
                 <div v-for='ingredient in ingredients' :key='ingredient.name' style="list-style-type: none;">
-                    <span>{{ ingredient.quantity }} {{ ingredient.name }}<span v-if="ingredient.prep_method">:  {{ ingredient.prep_method}}</span></span>
+                    <span :data-test='ingredient.name'>{{ ingredient.quantity }} {{ ingredient.name }}<span v-if="ingredient.prep_method">:  {{ ingredient.prep_method}}</span></span>
                 </div>
             </div>
 
@@ -50,7 +50,7 @@
             <table>
                 <tr>
                     <div v-for='cookStep in cookSteps' :key='cookStep.step_number'>
-                        <td>{{ cookStep.step_number }}.</td>
+                        <td :data-test='cookStep.step_number'>{{ cookStep.step_number }}.</td>
                         <td>{{ cookStep.step_details }}</td>
                     </div>
                 </tr>

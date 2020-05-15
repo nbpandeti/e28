@@ -1,4 +1,4 @@
-describe('create-product-page', () => {
+describe('create-recipe-page', () => {
 
     // Test recipe
     let recipe = {
@@ -15,6 +15,17 @@ describe('create-product-page', () => {
         sodium_mg: 0,
         sugar_grams: 0,
         trans_fat_grams: 0
+    }
+
+    let ingredient = {
+        name: 'olive oil',
+        quantity: '2 tablespoons',
+        prep_method: ''
+    }
+
+    let cook_step = {
+        step_details: 'Drink the olive oil',
+        step_number: 1
     }
 
     it('adds a new recipe', () => {
@@ -37,6 +48,27 @@ describe('create-product-page', () => {
         cy.get('[data-test=add-recipe-button]').click();
         cy.get('[data-test="recipe-added-confirmation"]').should('exist');
         cy.visit('/recipe/' + recipe.slug);
-        cy.contains('[data-test="recipe-name"]', recipe.name)
+        cy.contains('[data-test="recipe-name"]', recipe.name);
+
+        cy.visit('/Recipes/Ingredient/create');
+        cy.get('[data-test=recipe-ingredient-slug-input]').type(recipe.slug);
+        cy.get('[data-test=recipe-ingredient-name-input]').type(ingredient.name);
+        cy.get('[data-test=recipe-ingredient-quantity-input]').type(ingredient.quantity);
+
+        cy.get('[data-test=add-ingredient-button]').click();
+        cy.get('[data-test="ingredient-added-confirmation"]').should('exist');
+        cy.visit('/recipe/' + recipe.slug);
+        cy.contains('[data-test="'+ingredient.name+'"]', ingredient.name);
+
+        cy.visit('/Recipes/CookStep/create');
+        cy.get('[data-test=recipe-cook-step-slug-input]').type(recipe.slug);
+        cy.get('[data-test=recipe-cook-step-number-input]').type(cook_step.step_number);
+        cy.get('[data-test=recipe-cook-step-details-input]').type(cook_step.step_details);
+
+        cy.get('[data-test=add-cook-step-button]').click();
+        cy.get('[data-test="cook-step-added-confirmation"]').should('exist');
+        cy.visit('/recipe/' + recipe.slug);
+        cy.contains('[data-test="'+cook_step.step_number+'"]', cook_step.step_number);
+
     });
 })

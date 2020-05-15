@@ -61,6 +61,20 @@ export default new Vuex.Store({
                 }
             }
         },
+        getRecipeBySlugForForm(state) {
+            return function (slug) {
+                let recipe = null;
+                console.log("Store getRecipeBySlug :" + slug);
+                for (let key of Object.keys(state.recipes)) {
+                    console.log(slug + ": " + state.recipes[key].slug);
+                    if (state.recipes[key].slug == slug) {
+                        console.log(slug + "= " + state.recipes[key].slug);
+                        recipe = state.recipes[key];
+                    }
+                }
+                return recipe;
+            }
+        },
         getRecipeIngredientsBySlug(state) {
 
             return function (slug) {
@@ -84,6 +98,19 @@ export default new Vuex.Store({
                     }
                 }
                 return _.sortBy(coolStepsList, ['step_number']);
+            }
+        },
+        getNextRecipeCookingStepNumberBySlug(state) {
+            return function (slug) {
+                let number = 0;
+                console.log("Store getRecipeCookingStepsBySlug");
+                for (let key of Object.keys(state.cookSteps)) {
+                    if (state.cookSteps[key].recipe_slug == slug
+                        && state.cookSteps[key].step_number > number) {
+                        number = state.cookSteps[key].step_number;
+                    }
+                }
+                return number;
             }
         },
         getRecipeNutriInfoBySlug(state) {

@@ -1,14 +1,18 @@
 import Vue from 'vue'
 import App from '@/App.vue'
+import Vuelidate from 'vuelidate';
 import VueRouter from 'vue-router';
 import RecipesPage from '@/components/pages/RecipesPage.vue';
 import HomePage from '@/components/pages/HomePage.vue';
 import RecipePage from '@/components/pages/RecipePage.vue';
 import RecipeCreatePage from '@/components/pages/RecipeCreatePage.vue';
+import IngredientCreatePage from '@/components/pages/IngredientCreatePage.vue';
+import CookStepCreatePage from '@/components/pages/CookStepCreatePage.vue';
 import FavoritesListPage from '@/components/pages/FavoritesPage.vue';
 
 import store from '@/common/store';
 
+Vue.use(Vuelidate);
 Vue.use(VueRouter);
 
 Vue.config.productionTip = false
@@ -18,6 +22,8 @@ const routes = [
   { path: '/recipes', component: RecipesPage, name: 'recipes' },
   { path: '/recipe/:slug', component: RecipePage, name: 'recipe', props: true },
   { path: '/Recipes/create', component: RecipeCreatePage, name: 'add a recipe' },
+  { path: '/Recipes/Ingredient/create', component: IngredientCreatePage, name: 'add an ingredient' },
+  { path: '/Recipes/CookStep/create', component: CookStepCreatePage, name: 'add a cook step' },
   { path: '/favorites', component: FavoritesListPage, name: 'favorites' },
 ];
 

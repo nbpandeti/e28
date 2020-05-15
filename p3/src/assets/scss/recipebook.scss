@@ -187,6 +187,36 @@ PAGE SPECIFIC
 }
 
 /*----------------------------------------------------
+FORMS
+------------------------------------------------------*/
+
+.form-group {
+  margin: 20px 0;
+}
+
+.form-help {
+  font-size: 1.4rem;
+  color: $gray;
+  margin-top: 5px;
+}
+
+.form-feedback {
+  font-size: 1.3rem;
+  font-weight: bold;
+  padding: 10px 0;
+}
+
+.form-feedback-error {
+  color: $red;
+  @extend .form-feedback;
+}
+
+.form-feedback-success {
+  color: $green;
+  @extend .form-feedback;
+}
+
+/*----------------------------------------------------
 MISC
 -----------------------------------------------------*/
 .cleanList {

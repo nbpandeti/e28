@@ -23,7 +23,7 @@ export default {
     components: {},
     data: function() {
         return {
-            links: ['home', 'recipes', 'add a recipe', 'favorites']
+            links: ['home', 'recipes', 'add a recipe', 'add an ingredient', 'add a cook step', 'favorites']
         };
     },
     mounted: function() {
