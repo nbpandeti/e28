@@ -1,12 +1,12 @@
 <template>
     <div id='recipe-page' v-if='recipe.slug'>
-        <h1>{{ recipe.name }}</h1>
-        <a href="javascript:void(0)" @click='addToFavoritesList(slug)'>Add to Favorites</a>
+        <h1 data-test='recipe-name'>{{ recipe.name }}</h1>
+        <a href="javascript:void(0)" @click='addToFavoritesList(slug)' data-test='add-to-favorites-link'>Add to Favorites</a>
         <div><img class='recipe-thumb' :alt='"recipe image of  " + recipe.name' :src='imageSrc' /></div>
 
 
         <transition name='fade'>
-            <div class='alert' v-if='addAlert'>This recipe has been add to Your Favorites</div>
+            <div data-test='add-to-favorites-confirmation' class='alert' v-if='addAlert'>This recipe has been add to Your Favorites</div>
         </transition>
 
         <div style="display: inline-block; width: 100%;">

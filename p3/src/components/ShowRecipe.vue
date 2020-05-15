@@ -1,7 +1,8 @@
 <template>
-    <router-link class='recipe' :to='{ name: "recipe", params: {slug: recipe.slug }}'>
-        <div class='recipe-name'>{{ recipe.name }}</div>
-        <img class='recipe-thumb' :src='imageSrc' />
+    <router-link data-test='recipe-link'
+      class='recipe' :to='{ name: "recipe", params: {slug: recipe.slug }}'>
+        <div data-test='recipe-name' class='recipe-name'>{{ recipe.name }}</div>
+        <img :data-test='dataTestIdentifier' class='recipe-thumb' :src='imageSrc' />
     </router-link>
 </template>
 
@@ -12,6 +13,9 @@ export default {
         return {};
     },
     computed: {
+        dataTestIdentifier: function() {
+            return 'recipe-image-' + this.recipe.slug;
+        },
         imageSrc: function() {
             try {
                 return require('@/assets/images/recipes/' +

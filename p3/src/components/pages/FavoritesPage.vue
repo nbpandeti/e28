@@ -3,10 +3,10 @@
         <h1>Your Favorites</h1>
 
         <div v-if='items.length == 0'>No items</div>
-        <ul class='cleanList' v-if='recipes'>
+        <ul data-test='favorites-content' class='cleanList' v-if='recipes'>
             <li v-for='item in items' :key='item.slug'>
                 {{ getRecipeDetails(item.slug).name }}
-                <button
+                <button data-test='remove-from-favorites-link'
                     @click='removeFromFavoritesList(item.slug)'
                 >Remove</button>
             </li>
